@@ -1,0 +1,4 @@
+
+
+class LoggerConfigurationError(Exception):
+    pass

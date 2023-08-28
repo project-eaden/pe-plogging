@@ -1,2 +1,7 @@
 # pe-python-logging
-All-in-one Python logging solutions for compute solutions on distributed systems at Project Eaden
+
+
+A wrapper for the python standard `logging` library that eases creation of loggers for use in distributed systems. 
+
+## How to Use
+

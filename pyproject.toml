@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+package-dir = "pe_logging"
+
+[project]
+name = "pe_logging"
+version = "0.1"
+authors = [
+    {name = "Jonathan Wright", email = "jonathan@projecteaden.com"},
+]
+description = "A wrapper for the python standard `logging` library that eases creation of loggers for use in distributed systems. "
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["logging"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
