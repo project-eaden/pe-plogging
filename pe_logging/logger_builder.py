@@ -66,7 +66,7 @@ class PELogger:
                 tuple(self._handler_types_map.keys()),
             )
         except AssertionError as e:
-            raise LoggerConfigurationError(e.args[0].format({"name": self.name}))
+            raise LoggerConfigurationError(e.args[0].format(**{"name": self.name}))
 
         _levels = level * len(handler_types) if len(level) == 1 else level
         self.handlers = [
@@ -91,15 +91,15 @@ class LoggingConfig:
     """A class for checking validity of a given logger configuration"""
 
     level: Tuple[_level_types, ...] = tuple([logging.INFO])
-    handler: Tuple[_handler_types, ...] = tuple(["stream"])
+    handler_types: Tuple[_handler_types, ...] = tuple(["stream"])
     file_path: Optional[Path] = None
     accepted_types: Optional[Tuple[str, ...]] = None
 
     def __post_init__(self) -> None:
-        if "file" in self.handler:
+        if "file" in self.handler_types:
             assert self.file_path, "No filepath specified for {name} FileHandler!"
 
-        if (nl := len(self.level)) > 1 and (nh := len(self.handler)) > 1:
+        if (nl := len(self.level)) > 1 and (nh := len(self.handler_types)) > 1:
             assert nl == nh, (
                 "If multiple levels are supplied, the number of "
                 "specified handlers and specified levels must match! "
@@ -108,7 +108,7 @@ class LoggingConfig:
         assert (
             self.accepted_types
         ), "Misconfiguration error! End user should not see this!"
-        for h in self.handler:
+        for h in self.handler_types:
             assert (
                 h in self.accepted_types
             ), f"Invalid handler type, {h}, passed! Valid options are"
