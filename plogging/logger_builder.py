@@ -25,7 +25,7 @@ def create_stream_handler(level: int, file_path: Optional[Path]) -> logging.Hand
     return sh
 
 
-class PELogger:
+class Plogger:
     """
     The factory class for the Project Eaden standard logger for specified handlers.
 

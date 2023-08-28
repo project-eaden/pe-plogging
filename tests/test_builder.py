@@ -1,13 +1,13 @@
 import pytest
 import logging
 
-from pe_logging.logger_builder import (
+from plogging.logger_builder import (
     create_file_handler,
     create_stream_handler,
     LoggingConfig
 )
-from pe_logging import PELogger
-from pe_logging.exceptions import LoggerConfigurationError
+from plogging import PLogger
+from plogging.exceptions import LoggerConfigurationError
 
 
 NAME = "test_logger"
