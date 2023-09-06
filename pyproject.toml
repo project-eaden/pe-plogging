@@ -1,20 +1,24 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "plogging"
+[tool.poetry]
+name = "plogger"
 version = "0.1.2"
-authors = [
-    {name = "Jonathan Wright", email = "jonathan@projecteaden.com"},
-]
-description = "A wrapper for the python standard `logging` library that eases creation of loggers for use in distributed systems. "
+description = "A wrapper for the python standard `logging` library that eases creation of loggers for use in distributed systems."
+authors = ["john-but-actually-jon <jonathan@projecteaden.com>"]
 readme = "README.md"
-requires-python = ">=3.7"
-keywords = ["logging"]
-classifiers = [
-    "Programming Language :: Python :: 3",
-]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+black = "23.7.0"
+mypy = "1.5.1"
+flake8 = "6.1.0"
+pytest = "7.4.0"
+build = "0.10.0"
+twine = "4.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 pythonpath = "plogging"
