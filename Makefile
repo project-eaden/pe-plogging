@@ -3,6 +3,10 @@
 AWS_PROFILE_NAME=data-admin
 VERSION=0.1.2
 
+setup-env:
+	@python3 -m venv env 
+	@source env/bin/activate && poetry install
+
 format:
 	@echo "\n🎨 Formatting..." && \
 	python -m black plogging
