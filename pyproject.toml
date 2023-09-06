@@ -1,11 +1,10 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
-package-dir = "pe_logging"
 
 [project]
-name = "pe_logging"
-version = "0.1"
+name = "plogging"
+version = "0.1.2"
 authors = [
     {name = "Jonathan Wright", email = "jonathan@projecteaden.com"},
 ]
@@ -18,4 +17,6 @@ classifiers = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = "pe_logging"
+pythonpath = "plogging"
+
+[tool.black]
