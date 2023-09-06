@@ -2,26 +2,41 @@ from pathlib import Path
 from typing import Any, Optional, Tuple, List, Callable, Dict
 import logging
 from dataclasses import dataclass
+from logging import Formatter
 
-from .constants.formats import LOGGING_FORMATTER, _level_types, _handler_types
+from .constants.formats import (
+    LOG_FORMAT,
+    LOG_DATE_FORMAT,
+    ONE_LINE_LOG_FORMAT,
+    _level_types,
+    _handler_types,
+)
 from .exceptions import LoggerConfigurationError
 
 
-def create_file_handler(level: int, file_path: Path) -> logging.Handler:
+def create_file_handler(
+    level: int, file_path: Path, multiline: bool = True
+) -> logging.Handler:
     try:
         fh = logging.FileHandler(file_path)
     except FileNotFoundError:
         Path(file_path).parent.mkdir(parents=True)
         fh = logging.FileHandler(file_path)
     fh.setLevel(level=level)
-    fh.setFormatter(LOGGING_FORMATTER)
+    fh.setFormatter(
+        Formatter(LOG_FORMAT if multiline else ONE_LINE_LOG_FORMAT, LOG_DATE_FORMAT)
+    )
     return fh
 
 
-def create_stream_handler(level: int, file_path: Optional[Path]) -> logging.Handler:
+def create_stream_handler(
+    level: int, file_path: Optional[Path], multiline: bool = True
+) -> logging.Handler:
     sh = logging.StreamHandler()
     sh.setLevel(level=level)
-    sh.setFormatter(LOGGING_FORMATTER)
+    sh.setFormatter(
+        Formatter(LOG_FORMAT if multiline else ONE_LINE_LOG_FORMAT, LOG_DATE_FORMAT)
+    )
     return sh
 
 
@@ -56,6 +71,7 @@ class Plogger:
         level: List[_level_types] = [logging.INFO],
         handler_types: List[_handler_types] = ["stream"],
         file_path: Optional[Path] = None,
+        multiline: bool = True,
     ) -> None:
         self.name = name
         try:
@@ -70,7 +86,7 @@ class Plogger:
 
         _levels = level * len(handler_types) if len(level) == 1 else level
         self.handlers = [
-            self._handler_types_map[ht](ll, file_path)
+            self._handler_types_map[ht](ll, file_path, multiline)
             for ht, ll in zip(handler_types, _levels)
         ]
 
