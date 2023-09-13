@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "plogger"
-version = "0.1.2"
+name = "plogging"
+version = "0.0.0"
 description = "A wrapper for the python standard `logging` library that eases creation of loggers for use in distributed systems."
 authors = ["john-but-actually-jon <jonathan@projecteaden.com>"]
 readme = "README.md"

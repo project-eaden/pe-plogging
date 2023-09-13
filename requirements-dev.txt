@@ -1,7 +1,0 @@
-black==23.7.0
-mypy==1.5.1
-flake8==6.1.0
-pytest==7.4.0
-# For deployment
-build==0.10.0
-twine==4.0.2
