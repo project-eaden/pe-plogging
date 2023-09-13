@@ -26,10 +26,6 @@ test: lint
 build: test
 	@echo "\n🧱 Building version ${VERSION}..." && \
 	rm -rf dist && \
-	python -m build 
+	poetry version ${VERSION} && \
+	python -m build
 
-push-update: 
-	@echo "\n🪪 Fetching AWS Deployment Credentials..." && \
-	aws codeartifact login --tool twine --repository plogging --domain projecteaden --domain-owner 186292285156 --region eu-west-1 --profile $(AWS_PROFILE_NAME) && \
-	echo "\n✅ Deploying version ${VERSION} to remote refactory..."
-	twine upload --repository codeartifact dist/plogging-$(VERSION)-py3-none-any.whl --verbose
