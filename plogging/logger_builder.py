@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Tuple, List, Callable, Dict
+from typing import Optional, Tuple, List, Callable, Dict
 import logging
 from dataclasses import dataclass
 from logging import Formatter
@@ -64,6 +64,14 @@ class Plogger:
         "file": create_file_handler,
         "stream": create_stream_handler,
     }
+    _potential_logging_levels: List[str] = [
+        "debug",
+        "info",
+        "warn",
+        "warning",
+        "error",
+        "critical",
+    ]
 
     def __init__(
         self,
@@ -85,13 +93,15 @@ class Plogger:
             raise LoggerConfigurationError(e.args[0].format(**{"name": self.name}))
 
         _levels = level * len(handler_types) if len(level) == 1 else level
-        self.handlers = [
+        self.handlers: List[logging.Handler] = [
             self._handler_types_map[ht](ll, file_path, multiline)
             for ht, ll in zip(handler_types, _levels)
         ]
-
-    def __call__(self) -> Any:
-        return self._build_logger()
+        self.logger: logging.Logger = self._build_logger()
+        for logging_method in self._potential_logging_levels:
+            self.__setattr__(
+                logging_method, self.logger.__getattribute__(logging_method)
+            )
 
     def _build_logger(self) -> logging.Logger:
         logger = logging.getLogger(self.name)

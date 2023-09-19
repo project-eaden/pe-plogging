@@ -40,7 +40,7 @@ def test_handler_level_mismatch():
             "level":[logging.INFO, logging.DEBUG], 
             "handler_types":['stream'], 
         }
-        Plogger(**_args)()
+        Plogger(**_args)
         _args.pop("name")
         LoggingConfig(**_args)
 
@@ -51,7 +51,7 @@ def test_multiple_handlers_single_level(tmp_dir):
         "handler_types":['file', 'stream'], 
         "file_path": tmp_dir / "test.log",
     }
-    assert Plogger(**_args)()
+    assert Plogger(**_args)
 
 def test_file_handler(tmp_dir):
     _args = {
@@ -61,7 +61,7 @@ def test_file_handler(tmp_dir):
         "file_path": tmp_dir / "test.log",
     }
     # Test base directory logging
-    lg = Plogger(**_args)()
+    lg = Plogger(**_args)
     lg.info("infotest")
     lg.warning("warningtest")
 
@@ -80,7 +80,7 @@ def test_log_dir_creation(tmp_dir):
         "handler_types":['file', 'stream'], 
         "file_path": tmp_dir / "logs" / "test.log",
     }
-    lg = Plogger(**_args)()
+    lg = Plogger(**_args)
     lg.warning("Easter egg moment :)")
     assert (tmp_dir / "logs").exists()
     assert (tmp_dir / "logs").is_dir()
@@ -94,5 +94,5 @@ def test_1_line_log_creation():
         "handler_types":['stream'], 
         "multiline": False
     }
-    lg = Plogger(**_args)()
+    lg = Plogger(**_args)
     lg.warning("Easter egg moment :)")
