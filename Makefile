@@ -1,7 +1,7 @@
 .PHONY: build, test, lint, typecheck, format, push-update
 
 AWS_PROFILE_NAME=data-admin
-VERSION=0.1.3
+VERSION=0.1.4
 
 setup-env:
 	@python3 -m venv env 
