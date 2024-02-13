@@ -6,7 +6,6 @@ from logging import Formatter
 
 from .constants.formats import (
     LOG_FORMAT,
-    LOG_DATE_FORMAT,
     ONE_LINE_LOG_FORMAT,
     _level_types,
     _handler_types,
@@ -23,9 +22,7 @@ def create_file_handler(
         Path(file_path).parent.mkdir(parents=True)
         fh = logging.FileHandler(file_path)
     fh.setLevel(level=level)
-    fh.setFormatter(
-        Formatter(LOG_FORMAT if multiline else ONE_LINE_LOG_FORMAT, LOG_DATE_FORMAT)
-    )
+    fh.setFormatter(PloggerFormatter() if multiline else PloggerFormatterSingleLine())
     return fh
 
 
@@ -34,10 +31,37 @@ def create_stream_handler(
 ) -> logging.Handler:
     sh = logging.StreamHandler()
     sh.setLevel(level=level)
-    sh.setFormatter(
-        Formatter(LOG_FORMAT if multiline else ONE_LINE_LOG_FORMAT, LOG_DATE_FORMAT)
-    )
+    sh.setFormatter(PloggerFormatter() if multiline else PloggerFormatterSingleLine())
     return sh
+
+
+class PloggerFormatter(Formatter):
+    light_blue = "\033[0;34m"
+    light_green = "\033[0;32m"
+    warning = "\033[93m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+
+    lgfmt = LOG_FORMAT
+
+    FORMATS = {
+        logging.DEBUG: light_blue + lgfmt + reset,
+        logging.INFO: light_green + lgfmt + reset,
+        logging.WARNING: yellow + lgfmt + reset,
+        logging.ERROR: red + lgfmt + reset,
+        logging.CRITICAL: bold_red + lgfmt + reset,
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+
+class PloggerFormatterSingleLine(PloggerFormatter):
+    lgfmt = ONE_LINE_LOG_FORMAT
 
 
 class Plogger:

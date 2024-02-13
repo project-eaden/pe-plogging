@@ -62,8 +62,11 @@ def test_file_handler(tmp_dir):
     }
     # Test base directory logging
     lg = Plogger(**_args)
+    lg.debug("debugtest")
     lg.info("infotest")
     lg.warning("warningtest")
+    lg.critical("criticaltest")
+    lg.error("errorrtest")
 
     # Check that only the relevant bits were written to the log
     with open(_args["file_path"], 'r') as f:
