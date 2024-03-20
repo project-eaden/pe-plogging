@@ -1,8 +1,9 @@
 from pathlib import Path
-from typing import Optional, Tuple, List, Callable, Dict
+from typing import Optional, Tuple, List, Callable, Dict, Literal
 import logging
 from dataclasses import dataclass
 from logging import Formatter
+import json_logging
 
 from .constants.formats import (
     LOG_FORMAT,
@@ -104,6 +105,8 @@ class Plogger:
         handler_types: List[_handler_types] = ["stream"],
         file_path: Optional[Path] = None,
         multiline: bool = True,
+        web: Optional[Literal["flask"]] = None,
+        app: Optional[any] = None
     ) -> None:
         self.name = name
         try:
@@ -115,6 +118,11 @@ class Plogger:
             )
         except AssertionError as e:
             raise LoggerConfigurationError(e.args[0].format(**{"name": self.name}))
+
+        if web=="flask":
+            assert app, f"Specifying a `web` argument requires the flask app to also be passed!"
+            json_logging.init_flask(enable_json=True)
+            json_logging.init_request_instrument(app)
 
         _levels = level * len(handler_types) if len(level) == 1 else level
         self.handlers: List[logging.Handler] = [
