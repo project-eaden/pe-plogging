@@ -1,9 +1,9 @@
 from pathlib import Path
-from typing import Optional, Tuple, List, Callable, Dict, Literal
+from typing import Optional, Tuple, List, Callable, Dict
 import logging
 from dataclasses import dataclass
 from logging import Formatter
-import json_logging
+import bisect
 
 from .constants.formats import (
     LOG_FORMAT,
@@ -105,8 +105,6 @@ class Plogger:
         handler_types: List[_handler_types] = ["stream"],
         file_path: Optional[Path] = None,
         multiline: bool = True,
-        web: Optional[Literal["flask"]] = None,
-        app: Optional[any] = None
     ) -> None:
         self.name = name
         try:
@@ -119,11 +117,6 @@ class Plogger:
         except AssertionError as e:
             raise LoggerConfigurationError(e.args[0].format(**{"name": self.name}))
 
-        if web=="flask":
-            assert app, f"Specifying a `web` argument requires the flask app to also be passed!"
-            json_logging.init_flask(enable_json=True)
-            json_logging.init_request_instrument(app)
-
         _levels = level * len(handler_types) if len(level) == 1 else level
         self.handlers: List[logging.Handler] = [
             self._handler_types_map[ht](ll, file_path, multiline)
@@ -134,6 +127,13 @@ class Plogger:
             self.__setattr__(
                 logging_method, self.logger.__getattribute__(logging_method)
             )
+
+    def log(self, level: str, msg: str) -> None:
+        if isinstance(level, int):
+            level = ["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"][
+                bisect.bisect_left([0, 10, 20, 30, 40, 50], level)
+            ]
+        self.__getattribute__(level.lower())(msg)
 
     def _build_logger(self) -> logging.Logger:
         logger = logging.getLogger(self.name)
@@ -171,3 +171,9 @@ class LoggingConfig:
                 h in self.accepted_types
             ), f"Invalid handler type, {h}, passed! Valid options are"
             "'stream' and 'file'."
+
+
+if __name__ == "__main__":
+    logger = Plogger(__name__, [logging.DEBUG])
+
+    logger.log("DEBUG", "yes this is logged")

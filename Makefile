@@ -9,15 +9,15 @@ setup-env:
 
 format:
 	@echo "\n🎨 Formatting..." && \
-	python -m black plogging
+	poetry run black . --config pyproject.toml
 
 typecheck: format
 	@echo "\n🏷️ Type-checking..." && \
-	python -m mypy plogging
+	poetry run mypy plogging --config-file pyproject.toml
 
 lint: typecheck
 	@echo "\n👔 Linting..." && \
-	python -m flake8 plogging
+	poetry run flake8 plogging --toml-config pyproject.toml
 
 test: lint
 	@echo "\n🧪 Testing..." && \
